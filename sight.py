@@ -24,7 +24,16 @@ for i in range(len(datelist)):
     aa = altazimuth(ghalist[i], declist[i], jackson.lon, jackson.lat)
     print "Alt", s.alt, "Azi", s.az, 
     print aa
-    print "    ", ephem.degrees(s.alt - aa['Hc']), ephem.degrees(s.az - aa['Z'])
+    print "    diffs:", ephem.degrees(s.alt - aa['Hc']), ephem.degrees(s.az - aa['Z'])
+    print "    lst:", jackson.sidereal_time()
+    print "    ra:", s.ra
+    print "    lha:", ephem.degrees(jackson.sidereal_time() - s.ra)
+    print "    lha_a:", ephem.degrees(ghalist[i] + jackson.lon)
+    gha_ephem = ephem.degrees(jackson.sidereal_time() - s.ra - jackson.lon)
+    print "    gha alman:", ghalist[i]
+    print "    gha ephem:", gha_ephem
+    print "    diff:", ghalist[i] - gha_ephem
 
 print
 print "sun radius", s.radius
+
