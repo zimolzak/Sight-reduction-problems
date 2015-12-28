@@ -15,14 +15,16 @@ declist = [ephem.degrees('-21:38.7'), ephem.degrees('-21:38.3'),
 jackson = ephem.Observer()
 jackson.lat = '42.2458'
 jackson.lon = '-84.4014'
-jackson.elevation = 0 # fixme later
-#jackson.elevation = 303.9 # meters = 997 feet.
+jackson.pressure = 0
+jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
 for i in range(len(datelist)):
     jackson.date = datelist[i]
     s = ephem.Sun(jackson)
+    aa = altazimuth(ghalist[i], declist[i], jackson.lon, jackson.lat)
     print "Alt", s.alt, "Azi", s.az, 
-    print altazimuth(ghalist[i], declist[i], jackson.lon, jackson.lat)
+    print aa
+    print "    ", ephem.degrees(s.alt - aa['Hc']), ephem.degrees(s.az - aa['Z'])
 
 print
 print "sun radius", s.radius
