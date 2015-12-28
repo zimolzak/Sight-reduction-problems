@@ -21,3 +21,14 @@ def altazimuth(gha, dec, long, lat):
     else:
         Z = ephem.degrees(ephem.degrees('360') - A)
     return dict(Hc=Hc, Z=Z)
+
+def almanac(date):
+    place = ephem.Observer()
+    place.lat = '45.0'
+    place.lon = '-90.0'
+    place.pressure = 0
+    place.date = date
+    s = ephem.Sun(place)
+    gha_ephem = ephem.degrees(place.sidereal_time() - s.ra - place.lon)
+    dec_ephem = ephem.degrees(s.dec)
+    return dict(gha=gha_ephem, dec=dec_ephem)

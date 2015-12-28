@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import ephem
-from sr_lib import altazimuth
+from sr_lib import altazimuth, almanac
 
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
@@ -32,7 +32,10 @@ for i in range(len(datelist)):
     gha_ephem = ephem.degrees(jackson.sidereal_time() - s.ra - jackson.lon)
     print "    gha alman:", ghalist[i]
     print "    gha ephem:", gha_ephem
-    print "    diff:", ghalist[i] - gha_ephem
+    print "    diff:", ephem.degrees(ghalist[i] - gha_ephem)
+    print "    diff dec:", ephem.degrees(s.dec - declist[i])
+    print "    dec alm:", declist[i]
+    print "    func:", almanac(datelist[i])
 
 print
 print "sun radius", s.radius
