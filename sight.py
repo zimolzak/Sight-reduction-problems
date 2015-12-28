@@ -3,16 +3,16 @@
 import ephem
 import math
 
-s = ephem.Sun()
-s.compute()
+jackson = ephem.Observer()
+jackson.lat = '42.2458'
+jackson.lon = '-84.4014'
+jackson.elevation = 997 # 997 feet. Correct??
+jackson.date = '2016/01/12 18:00:00' # 13:00 eastern
 
-print "now"
-print "RA", s.ra, "Dec", s.dec
+s = ephem.Sun(jackson)
 
-for h in range(24):
-    d = ephem.Date(42380 + h / 24.0) #2016/1/12 12:00:00
-    print d,
-    s.compute(d)
-    print "RA", s.ra / (2 * math.pi) * 360 , "Dec", s.dec
-    print "                  ", "RA", s.a_ra / (2 * math.pi) * 360 , "Dec", s.a_dec
-    print "                  ", "RA", s.g_ra / (2 * math.pi) * 360 , "Dec", s.g_dec
+print "Alt", s.alt, "Azi", s.az
+
+###
+
+#jackson.date = '2016/01/12 18:00:00' # 13:00 eastern
