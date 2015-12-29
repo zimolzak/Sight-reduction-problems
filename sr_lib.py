@@ -1,4 +1,4 @@
-from math import sin, cos, asin, acos
+from math import sin, cos, tan, asin, acos, pi
 import ephem
 
 def altazimuth(gha, dec, long, lat):
@@ -32,3 +32,27 @@ def almanac(date):
     gha_ephem = ephem.degrees(place.sidereal_time() - s.ra - place.lon)
     dec_ephem = ephem.degrees(s.dec)
     return dict(gha=gha_ephem, dec=dec_ephem)
+
+def refraction(app_alt):
+    """http://shipofficer.com/so/wp-content/uploads/2015/02/17.-Altitude.pdf"""
+    assert type(app_alt) == ephem.Angle
+    assert app_alt > ephem.degrees('11')
+    minutes = 0.96 / tan(app_alt)
+    return ephem.degrees((minutes / 60 / 360) * (2 * pi))
+
+def parallax(alt):
+    assert type(alt) == ephem.Angle
+    HP = ephem.earth_radius / ephem.meters_per_au
+    return ephem.degrees(asin(sin(HP) * cos(alt)))
+
+def sd(date):
+    assert type(date) == ephem.Date
+    return ephem.Sun(date).radius
+
+def ho(ha, date, limb):
+    assert limb == 'LL' or limb == 'UL'
+    if limb == 'LL':
+        semi_diam = sd(dt)
+    elif limb == 'UL':
+        semi_diam = -1 * sd(dt)
+    return ephem.degrees(parallax(ha) - refraction(ha) + semi_diam)
