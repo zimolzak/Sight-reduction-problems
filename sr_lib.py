@@ -149,3 +149,11 @@ def ho249(lat, dec, lha):
     H.append(Zn)
     print "\tH", H
     return H
+
+def ho_correction(H, dec):
+    print "\tcorrecting..."
+    Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
+    d = H[2]
+    min_dec = ephem.degrees(abs(dec - int_deg(dec)))
+    print "\tHc", Hc, ", d", d, ", min dec", min_dec
+    return 1

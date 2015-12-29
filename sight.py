@@ -2,7 +2,7 @@
 
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
-                    ho2hs, roundup_deg, int_deg, ho249)
+                    ho2hs, roundup_deg, int_deg, ho249, ho_correction)
 from math import pi
 import random
 
@@ -57,7 +57,8 @@ for date_str in dl_abbr:
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
-    ho249(ap.lat, al['dec'], lha)
+    H = ho249(ap.lat, al['dec'], lha)
+    ho_correction(H, al['dec'])
     I = intercept(ho_1, s.alt)
     print "Intercept", I
     if I[1][0] == 'A':
