@@ -100,3 +100,15 @@ def destination(p1, l1, t, d):
     dest.lat = ephem.degrees(p2)
     dest.long = ephem.degrees(l2)
     return dest
+
+def roundup_deg(angle):
+    """what do I add to this to make it integer degrees?"""
+    dms = str(angle).split(':')
+    min_sec_only = ephem.degrees(':'.join(['0', dms[1], dms[2]]))
+    if angle < 0:
+        return min_sec_only
+    return ephem.degrees('1') - min_sec_only
+
+def int_deg(angle):
+    dms = str(angle).split(':')
+    return ephem.degrees(dms[0])

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import ephem
-from sr_lib import altazimuth, almanac, ha, ho, intercept, destination, ho2hs
+from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
+                    ho2hs, roundup_deg, int_deg)
 from math import pi
 import random
 
@@ -17,6 +18,7 @@ jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 ap = jackson.copy()
 ap.lat = '42'
 ap.lon = '-84'
+base_ap_lon = ap.lon
 
 ## Set up free parameters
 ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
@@ -44,6 +46,11 @@ for date_str in datelist:
     ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
     print "ha", ha_1
     print "ho", ho_1
+    al = almanac(date_str)
+    print "GHA", al['gha'], "/ Dec", al['dec']
+    ap.lon = base_ap_lon + roundup_deg(al['gha'])
+    print "Ass Long", ap.lon
+    print "LHA", ephem.degrees(al['gha'] + ap.lon)
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
