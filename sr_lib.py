@@ -139,6 +139,8 @@ def ho249(lat, dec, lha):
                     H = [26, 53, -59, 176]
                 elif lha_a == 19 or lha_a == 341:
                     H = [24, 36, -58, 160]
+                elif lha_a == 34 or lha_a == 326:
+                    H = [19, 36, -54, 146]
     if H[3] ==  None:
         H.append(None)
         return H
@@ -171,6 +173,9 @@ def ho_correction(H, dec):
     elif abs(d) == 58:
         if min_dec == 38:
             corr = 37
+    elif abs(d) == 54:
+        if min_dec == 38:
+            corr = 34
     if d < 0:
         sg = -1
     else:
