@@ -131,11 +131,15 @@ def ho249(lat, dec, lha):
     lha_a = deg(lha)
     print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
            ", lha " + str(lha_a) + '.')
+    H = [None, None, None, None]
     if lat_a == 42:
         if name == 'contrary':
             if dec_a == 21:
                 if lha_a == 4 or lha_a == 356:
                     H = [26, 53, -59, 176]
+    if H[3] ==  None:
+        H.append(None)
+        return H
     if lat > 0:
         if lha > pi:
             Zn = H[3]
@@ -152,6 +156,8 @@ def ho249(lat, dec, lha):
 
 def ho_correction(H, dec):
     print "\tcorrecting..."
+    if H[0] == None or H[1] == None or H[2] == None:
+        return None
     Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
     d = H[2]
     dms = str(dec).split(':')
