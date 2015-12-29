@@ -15,10 +15,6 @@ jackson.lon = '-84.4014'
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
-ap = jackson.copy()
-ap.lat = '42'
-ap.lon = '-84'
-base_ap_lon = ap.lon
 
 ## Set up free parameters
 ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
@@ -33,31 +29,38 @@ for date_str in datelist:
     refsun = ephem.Sun(jackson)
     hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, date_str, limb_ref)
     print "PROBLEM ----"
-    print "hs", hs_1
+    print "Hs", hs_1
     print ("IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
            str(eyeht_ref) + " meters. Sun " + limb_ref + '.')
+    ap = jackson.copy()
     ap.date = date_str
     print ap.date, "UTC"
+    print "Sorta dead reck", jackson.lat, jackson.lon
     print
     
     ## Do sight reduction
     print "SOLUTION ----"
     ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
     ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
-    print "ha", ha_1
-    print "ho", ho_1
+    print "Ha", ha_1
+    print "Ho", ho_1
     al = almanac(date_str)
     print "GHA", al['gha'], "/ Dec", al['dec']
+    # AP stuff
+    ap.lat = int_deg(jackson.lat)
+    base_ap_lon = int_deg(jackson.lon)
     ap.lon = base_ap_lon + roundup_deg(al['gha'])
     print "Ass Long", ap.lon
     lha = ephem.degrees(al['gha'] + ap.lon)
     print "LHA", lha
+    # Solve the triangle for AP
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
     H = ho249(ap.lat, al['dec'], lha)
     Hc_final = ho_correction(H, al['dec'])
     print "Hc", Hc_final, "/ Zn", H[4], "(from HO-249!)"
+    # Go from AP to real P
     I = intercept(ho_1, s.alt)
     print "Intercept", I
     if I[1][0] == 'A':
