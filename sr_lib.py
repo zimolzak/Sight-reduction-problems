@@ -110,5 +110,60 @@ def roundup_deg(angle):
     return ephem.degrees('1') - min_sec_only
 
 def int_deg(angle):
+    """Return an angle object with only integer degrees."""
     dms = str(angle).split(':')
     return ephem.degrees(dms[0])
+
+def deg(angle):
+    """Return a plain integer that is simply degrees extracted."""
+    dms = str(angle).split(':')
+    return int(dms[0])
+
+def ho249(lat, dec, lha):
+    # vol 3: lat 39-89, decl 0-29
+    H = []
+    if (lat < 0 and dec < 0) or (lat > 0 and dec > 0):
+        name = 'same'
+    else:
+        name = 'contrary'
+    lat_a = abs(deg(lat))
+    dec_a = abs(deg(dec))
+    lha_a = deg(lha)
+    print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
+           ", lha " + str(lha_a) + '.')
+    if lat_a == 42:
+        if name == 'contrary':
+            if dec_a == 21:
+                if lha_a == 4 or lha_a == 356:
+                    H = [26, 53, -59, 176]
+    if lat > 0:
+        if lha > pi:
+            Zn = H[3]
+        else:
+            Zn = 360 - H[3]
+    else:
+        if lha > pi:
+            Zn = 180 - H[3]
+        else:
+            Zn = 180 + H[3]
+    H.append(Zn)
+    print "\tH", H
+    return H
+
+def ho_correction(H, dec):
+    print "\tcorrecting..."
+    Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
+    d = H[2]
+    dms = str(dec).split(':')
+    min_dec = int(round(float(dms[1]) + float(dms[2]) / 60.0))
+    corr = None
+    if abs(d) == 59:
+        if min_dec == 39:
+            corr = 38
+    if d < 0:
+        sg = -1
+    else:
+        sg = 1
+    Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
+    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
+    return Hc1
