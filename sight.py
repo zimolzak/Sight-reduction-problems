@@ -17,12 +17,9 @@ ap.lat = '42'
 ap.lon = '-84'
 
 for p in [jackson, ap]:
-    p.date = datelist[1]
+    p.date = datelist[0]
     s = ephem.Sun(p)
-    al = almanac(p.date)
-    aa = altazimuth(al['gha'], al['dec'], p.lon, p.lat)
-    print "PyEphem                     Hc ", s.alt, "    Z", s.az
-    print " almanac and altazimuth:", aa
+    print "Hc", s.alt, "Z", s.az
 
 hs_1 = ephem.degrees('26')
 print "hs", hs_1
