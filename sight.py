@@ -9,12 +9,16 @@ import random
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
 
+# Secret true coordinates
 jackson = ephem.Observer()
 jackson.lat = '42.2458'
 jackson.lon = '-84.4014'
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
+degree_variate = ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
+# 2.576 SD = 99% of all variates (between -1 and 1 deg).
+print degree_variate
 
 ## Set up free parameters
 ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
@@ -26,16 +30,20 @@ for date_str in datelist:
 
     ## Set up date- and secret-location-specific back-calculations
     jackson.date = date_str
-    refsun = ephem.Sun(jackson)
+    refsun = ephem.Sun(jackson) #secret
     hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, date_str, limb_ref)
     print "PROBLEM ----"
     print "Hs", hs_1
     print ("IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
            str(eyeht_ref) + " meters. Sun " + limb_ref + '.')
-    ap = jackson.copy()
+    dr = jackson.copy() # soon to be non-secret
+    dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
+    dr.lon += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
+    
+    ap = jackson.copy() # fixme. base on dead reck.
     ap.date = date_str
     print ap.date, "UTC"
-    print "Sorta dead reck", jackson.lat, jackson.lon
+    print "Sorta dead reck", dr.lat, dr.lon
     print
     
     ## Do sight reduction
