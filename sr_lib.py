@@ -55,9 +55,6 @@ def ho(ha, date, limb):
         semi_diam = sd(date)
     elif limb == 'UL':
         semi_diam = -1 * sd(date)
-    print "\trefraction\t", minute(refraction(ha))
-    print "\tsemi-diameter\t", minute(sd(date))
-    print "\tparallax\t", minute(parallax(ha))
     return ephem.degrees(ha + parallax(ha) - refraction(ha) + semi_diam)
 
 def minute(x):
@@ -69,8 +66,6 @@ def ha(hs, ie, arc, height_m):
     if arc == 'on':
         ie = ephem.degrees(ie * -1)
     dip = ephem.degrees(str(-1.758 / 60 * sqrt(height_m)))
-    print "\tindex error\t", minute(ie)
-    print "\tdip\t\t", minute(dip)
     return ephem.degrees(hs + ie + dip)
 
 def ho2hs(ho, ie, arc, height_m, date_str, limb):

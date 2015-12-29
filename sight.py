@@ -17,6 +17,19 @@ ap = jackson.copy()
 ap.lat = '42'
 ap.lon = '-84'
 
+jackson.date = datelist[0]
+refsun = ephem.Sun(jackson)
+ie_ref = ephem.degrees('0:1.2')
+arc_ref = 'on'
+eyeht_ref = 15
+limb_ref = 'LL'
+
+hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, datelist[0], limb_ref)
+ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
+ho_1 = ho(ha_1, ephem.Date(datelist[0]), limb_ref)
+print "hs", hs_1
+print "ha", ha_1
+print "ho", ho_1
 print
 
 for p in [jackson, ap]:
@@ -24,12 +37,6 @@ for p in [jackson, ap]:
     print p.date, "UTC"
     s = ephem.Sun(p)
 
-    hs_1 = ephem.degrees('25:55:01.2')
-    print "hs", hs_1
-    ha_1 = ha(hs_1, ephem.degrees('0:1.2'), 'on', 15)
-    print "ha", ha_1
-    ho_1 = ho(ha_1, ephem.Date(datelist[0]), 'LL')
-    print "ho", ho_1
     print "calculating at position", p.lat, p.lon
     print "Hc", s.alt, "/ Z", s.az
     I = intercept(ho_1, s.alt)
@@ -42,7 +49,5 @@ for p in [jackson, ap]:
     dir1 = ephem.degrees(s.az - pi/2)
     dir2 = ephem.degrees(s.az + pi/2)
     print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
-    print "To get LOP directly thru position, Hs=",
-    print ho2hs(s.alt, ephem.degrees('0:1.2'), 'on', 15, datelist[0], 'LL')
     print
     
