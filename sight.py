@@ -2,12 +2,14 @@
 
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
-                    ho2hs, roundup_deg, int_deg)
+                    ho2hs, roundup_deg, int_deg, ho249)
 from math import pi
 import random
 
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
+
+dl_abbr = ['2016/01/12 18:00:00']
 
 jackson = ephem.Observer()
 jackson.lat = '42.2458'
@@ -28,7 +30,7 @@ limb_ref = random.choice(['LL', 'UL'])
 print "IE", ie_ref, arc_ref, "the arc. Eye", eyeht_ref, "meters. Sun", limb_ref
 print
 
-for date_str in datelist:
+for date_str in dl_abbr:
 
     ## Set up date- and secret-location-specific back-calculations
     jackson.date = date_str
@@ -50,10 +52,12 @@ for date_str in datelist:
     print "GHA", al['gha'], "/ Dec", al['dec']
     ap.lon = base_ap_lon + roundup_deg(al['gha'])
     print "Ass Long", ap.lon
-    print "LHA", ephem.degrees(al['gha'] + ap.lon)
+    lha = ephem.degrees(al['gha'] + ap.lon)
+    print "LHA", lha
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
+    ho249(ap.lat, al['dec'], lha)
     I = intercept(ho_1, s.alt)
     print "Intercept", I
     if I[1][0] == 'A':

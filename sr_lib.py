@@ -110,5 +110,42 @@ def roundup_deg(angle):
     return ephem.degrees('1') - min_sec_only
 
 def int_deg(angle):
+    """Return an angle object with only integer degrees."""
     dms = str(angle).split(':')
     return ephem.degrees(dms[0])
+
+def deg(angle):
+    """Return a plain integer that is simply degrees extracted."""
+    dms = str(angle).split(':')
+    return int(dms[0])
+
+def ho249(lat, dec, lha):
+    # vol 3: lat 39-89, decl 0-29
+    H = []
+    if (lat < 0 and dec < 0) or (lat > 0 and dec > 0):
+        name = 'same'
+    else:
+        name = 'contrary'
+    lat_a = abs(deg(lat))
+    dec_a = abs(deg(dec))
+    lha_a = deg(lha)
+    print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
+           ", lha " + str(lha_a) + '.')
+    if lat_a == 42:
+        if name == 'contrary':
+            if dec_a == 21:
+                if lha_a == 4 or lha_a == 356:
+                    H = [26, 53, -59, 176]
+    if lat > 0:
+        if lha > pi:
+            Zn = H[3]
+        else:
+            Zn = 360 - H[3]
+    else:
+        if lha > pi:
+            Zn = 180 - H[3]
+        else:
+            Zn = 180 + H[3]
+    H.append(Zn)
+    print "\tH", H
+    return H
