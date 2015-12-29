@@ -1,4 +1,4 @@
-from math import sin, cos, tan, asin, acos, pi
+from math import sin, cos, tan, asin, acos, pi, sqrt
 import ephem
 
 def altazimuth(gha, dec, long, lat):
@@ -52,7 +52,23 @@ def sd(date):
 def ho(ha, date, limb):
     assert limb == 'LL' or limb == 'UL'
     if limb == 'LL':
-        semi_diam = sd(dt)
+        semi_diam = sd(date)
     elif limb == 'UL':
-        semi_diam = -1 * sd(dt)
-    return ephem.degrees(parallax(ha) - refraction(ha) + semi_diam)
+        semi_diam = -1 * sd(date)
+    print "\trefraction\t", minute(refraction(ha))
+    print "\tsemi-diameter\t", minute(sd(date))
+    print "\tparallax\t", minute(parallax(ha))
+    return ephem.degrees(ha + parallax(ha) - refraction(ha) + semi_diam)
+
+def minute(x):
+    return x / (2*pi) * 360 * 60
+
+def ha(hs, ie, arc, height_m):
+    assert arc == 'on' or arc == 'off'
+    assert type(hs) == type(ie) == ephem.Angle
+    if arc == 'on':
+        ie = ephem.degrees(ie * -1)
+    dip = ephem.degrees(str(-1.758 / 60 * sqrt(height_m)))
+    print "\tindex error\t", minute(ie)
+    print "\tdip\t\t", minute(dip)
+    return ephem.degrees(hs + ie + dip)
