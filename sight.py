@@ -3,6 +3,7 @@
 import ephem
 from sr_lib import altazimuth, almanac, ha, ho, intercept, destination, ho2hs
 from math import pi
+import random
 
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
@@ -20,9 +21,12 @@ ap.lon = '-84'
 jackson.date = datelist[0]
 refsun = ephem.Sun(jackson)
 ie_ref = ephem.degrees('0:1.2')
-arc_ref = 'on'
+arc_ref = random.choice(['on', 'off'])
 eyeht_ref = 15
 limb_ref = 'LL'
+
+print "IE", ie_ref, arc_ref, "the arc. Eye", eyeht_ref, "meters. Sun", limb_ref
+print
 
 hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, datelist[0], limb_ref)
 ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
