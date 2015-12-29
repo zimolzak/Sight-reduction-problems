@@ -25,8 +25,6 @@ ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
 arc_ref = random.choice(['on', 'off'])
 eyeht_ref = round(random.uniform(1,15), 1)
 limb_ref = random.choice(['LL', 'UL'])
-print "IE", ie_ref, arc_ref, "the arc. Eye", eyeht_ref, "meters. Sun", limb_ref
-print
 
 for date_str in datelist:
 
@@ -36,6 +34,8 @@ for date_str in datelist:
     hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, date_str, limb_ref)
     print "PROBLEM ----"
     print "hs", hs_1
+    print ("IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
+           str(eyeht_ref) + " meters. Sun " + limb_ref + '.')
     ap.date = date_str
     print ap.date, "UTC"
     print
