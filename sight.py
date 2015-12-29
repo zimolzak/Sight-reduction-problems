@@ -12,15 +12,14 @@ jackson.lon = '-84.4014'
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
+ap = jackson
+ap.lat = '42'
+ap.lon = '-84'
+
 for i in range(len(datelist)):
     jackson.date = datelist[i]
     s = ephem.Sun(jackson)
     al = almanac(jackson.date)
     aa = altazimuth(al['gha'], al['dec'], jackson.lon, jackson.lat)
-    print "Alt", s.alt, "Azi", s.az
-    print "    from gha:", aa
-    print "    func:", almanac(datelist[i])
-
-print
-print "sun radius", s.radius
-
+    print "PyEphem                     Hc ", s.alt, "    Z", s.az
+    print " almanac and altazimuth:", aa
