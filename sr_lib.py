@@ -129,8 +129,8 @@ def ho249(lat, dec, lha):
     lat_a = abs(deg(lat))
     dec_a = abs(deg(dec))
     lha_a = deg(lha)
-    print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
-           ", lha " + str(lha_a) + '.')
+#    print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
+#           ", lha " + str(lha_a) + '.')
     H = [None, None, None, None]
     if lat_a == 42:
         if name == 'contrary':
@@ -141,6 +141,8 @@ def ho249(lat, dec, lha):
                     H = [24, 36, -58, 160]
                 elif lha_a == 34 or lha_a == 326:
                     H = [19, 36, -54, 146]
+                elif lha_a == 49 or lha_a == 360-49:
+                    H = [12, 26, -49, 134]
     if H[3] ==  None:
         H.append(None)
         return H
@@ -155,11 +157,11 @@ def ho249(lat, dec, lha):
         else:
             Zn = 180 + H[3]
     H.append(Zn)
-    print "\tH", H
+#    print "\tH", H
     return H
 
 def ho_correction(H, dec):
-    print "\tcorrecting..."
+#    print "\tcorrecting..."
     if H[0] == None or H[1] == None or H[2] == None:
         return None
     Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
@@ -176,6 +178,9 @@ def ho_correction(H, dec):
     elif abs(d) == 54:
         if min_dec == 38:
             corr = 34
+    elif abs(d) == 49:
+        if min_dec == 38:
+            corr = 31
     if d < 0:
         sg = -1
     else:
@@ -183,5 +188,5 @@ def ho_correction(H, dec):
     if corr == None:
         return None
     Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
-    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
+#    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
     return Hc1

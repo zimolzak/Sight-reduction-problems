@@ -9,9 +9,6 @@ import random
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
 
-dl_abbr = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
-           '2016/01/12 20:00:00']
-
 jackson = ephem.Observer()
 jackson.lat = '42.2458'
 jackson.lon = '-84.4014'
@@ -31,7 +28,7 @@ limb_ref = random.choice(['LL', 'UL'])
 print "IE", ie_ref, arc_ref, "the arc. Eye", eyeht_ref, "meters. Sun", limb_ref
 print
 
-for date_str in dl_abbr:
+for date_str in datelist:
 
     ## Set up date- and secret-location-specific back-calculations
     jackson.date = date_str
