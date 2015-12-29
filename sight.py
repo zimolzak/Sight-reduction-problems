@@ -58,7 +58,8 @@ for date_str in dl_abbr:
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
     H = ho249(ap.lat, al['dec'], lha)
-    ho_correction(H, al['dec'])
+    Hc_final = ho_correction(H, al['dec'])
+    print "Hc", Hc_final, "/ Zn", H[4], "(from HO-249!)"
     I = intercept(ho_1, s.alt)
     print "Intercept", I
     if I[1][0] == 'A':

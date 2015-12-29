@@ -154,6 +154,16 @@ def ho_correction(H, dec):
     print "\tcorrecting..."
     Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
     d = H[2]
-    min_dec = ephem.degrees(abs(dec - int_deg(dec)))
-    print "\tHc", Hc, ", d", d, ", min dec", min_dec
-    return 1
+    dms = str(dec).split(':')
+    min_dec = int(round(float(dms[1]) + float(dms[2]) / 60.0))
+    corr = None
+    if abs(d) == 59:
+        if min_dec == 39:
+            corr = 38
+    if d < 0:
+        sg = -1
+    else:
+        sg = 1
+    Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
+    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
+    return Hc1
