@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import ephem
-from sr_lib import altazimuth, almanac, ha, ho, intercept, destination
+from sr_lib import altazimuth, almanac, ha, ho, intercept, destination, ho2hs
 from math import pi
 
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
@@ -42,4 +42,7 @@ for p in [jackson, ap]:
     dir1 = ephem.degrees(s.az - pi/2)
     dir2 = ephem.degrees(s.az + pi/2)
     print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
+    print "To get LOP directly thru position, Hs=",
+    print ho2hs(s.alt, ephem.degrees('0:1.2'), 'on', 15, datelist[0], 'LL')
     print
+    

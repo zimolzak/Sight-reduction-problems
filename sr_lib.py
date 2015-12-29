@@ -55,9 +55,9 @@ def ho(ha, date, limb):
         semi_diam = sd(date)
     elif limb == 'UL':
         semi_diam = -1 * sd(date)
-    #print "\trefraction\t", minute(refraction(ha))
-    #print "\tsemi-diameter\t", minute(sd(date))
-    #print "\tparallax\t", minute(parallax(ha))
+    print "\trefraction\t", minute(refraction(ha))
+    print "\tsemi-diameter\t", minute(sd(date))
+    print "\tparallax\t", minute(parallax(ha))
     return ephem.degrees(ha + parallax(ha) - refraction(ha) + semi_diam)
 
 def minute(x):
@@ -69,9 +69,25 @@ def ha(hs, ie, arc, height_m):
     if arc == 'on':
         ie = ephem.degrees(ie * -1)
     dip = ephem.degrees(str(-1.758 / 60 * sqrt(height_m)))
-    #print "\tindex error\t", minute(ie)
-    #print "\tdip\t\t", minute(dip)
+    print "\tindex error\t", minute(ie)
+    print "\tdip\t\t", minute(dip)
     return ephem.degrees(hs + ie + dip)
+
+def ho2hs(ho, ie, arc, height_m, date_str, limb):
+    ## setup
+    assert limb == 'LL' or limb == 'UL'
+    date = ephem.Date(date_str)
+    if limb == 'LL':
+        semi_diam = sd(date)
+    elif limb == 'UL':
+        semi_diam = -1 * sd(date)
+    if arc == 'on':
+        ie = ephem.degrees(ie * -1)
+    dip = ephem.degrees(str(-1.758 / 60 * sqrt(height_m)))
+    ## Do back calculations
+    ha = ho - parallax(ho) + refraction(ho) - semi_diam # p(ho) and r(ho) appx
+    hs = ha - ie - dip
+    return ephem.degrees(hs)
 
 def intercept(ho, hc):
     if ho > hc:
@@ -82,6 +98,7 @@ def intercept(ho, hc):
 def destination(p1, l1, t, d):
     # p1 phi1 lat. l1 lambda1 long. t theta heading. d angular dist.
     # http://www.movable-type.co.uk/scripts/latlong.html
+    # Chris Veness; MIT License
     p2 = asin(sin(p1) * cos(d) + cos(p1) * sin(d) * cos(t))
     l2 = l1 + atan2(sin(t) * sin(d) * cos(p1), cos(d) - sin(p1) * sin(p2))
     dest = ephem.Observer()
