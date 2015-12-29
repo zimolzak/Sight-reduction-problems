@@ -134,9 +134,11 @@ def ho249(lat, dec, lha):
     H = [None, None, None, None]
     if lat_a == 42:
         if name == 'contrary':
-            if dec_a == 21:
+            if dec_a == 21: ## page 25
                 if lha_a == 4 or lha_a == 356:
                     H = [26, 53, -59, 176]
+                elif lha_a == 19 or lha_a == 341:
+                    H = [24, 36, -58, 160]
     if H[3] ==  None:
         H.append(None)
         return H
@@ -170,6 +172,8 @@ def ho_correction(H, dec):
         sg = -1
     else:
         sg = 1
+    if corr == None:
+        return None
     Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
     print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
     return Hc1
