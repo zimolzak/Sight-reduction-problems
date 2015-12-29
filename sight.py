@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import ephem
-from sr_lib import altazimuth, almanac, ha, ho, intercept
+from sr_lib import altazimuth, almanac, ha, ho, intercept, destination
+from math import pi
 
 datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
             '2016/01/12 20:00:00', '2016/01/12 21:00:00']
@@ -31,5 +32,14 @@ for p in [jackson, ap]:
     print "ho", ho_1
     print "calculating at position", p.lat, p.lon
     print "Hc", s.alt, "/ Z", s.az
-    print "Intercept", intercept(ho_1, s.alt)
+    I = intercept(ho_1, s.alt)
+    print "Intercept", I
+    if I[1][0] == 'A':
+        theta = s.az - pi
+    elif I[1][0] == 'T':
+        theta = s.az
+    x = destination(p.lat, p.lon, theta, I[0])
+    dir1 = ephem.degrees(s.az - pi/2)
+    dir2 = ephem.degrees(s.az + pi/2)
+    print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
     print

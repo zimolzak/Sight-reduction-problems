@@ -1,4 +1,4 @@
-from math import sin, cos, tan, asin, acos, pi, sqrt
+from math import sin, cos, tan, asin, acos, pi, sqrt, atan2
 import ephem
 
 def altazimuth(gha, dec, long, lat):
@@ -78,3 +78,13 @@ def intercept(ho, hc):
         return [ephem.degrees(ho - hc), 'Toward Gp']
     else:
         return [ephem.degrees(hc - ho), 'Away from Gp']
+
+def destination(p1, l1, t, d):
+    # p1 phi1 lat. l1 lambda1 long. t theta heading. d angular dist.
+    # http://www.movable-type.co.uk/scripts/latlong.html
+    p2 = asin(sin(p1) * cos(d) + cos(p1) * sin(d) * cos(t))
+    l2 = l1 + atan2(sin(t) * sin(d) * cos(p1), cos(d) - sin(p1) * sin(p2))
+    dest = ephem.Observer()
+    dest.lat = ephem.degrees(p2)
+    dest.long = ephem.degrees(l2)
+    return dest
