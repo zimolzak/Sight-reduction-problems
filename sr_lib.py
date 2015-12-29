@@ -168,6 +168,9 @@ def ho_correction(H, dec):
     if abs(d) == 59:
         if min_dec == 39:
             corr = 38
+    elif abs(d) == 58:
+        if min_dec == 38:
+            corr = 37
     if d < 0:
         sg = -1
     else:
