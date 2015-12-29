@@ -18,20 +18,23 @@ ap = jackson.copy()
 ap.lat = '42'
 ap.lon = '-84'
 
-jackson.date = datelist[0]
-refsun = ephem.Sun(jackson)
-ie_ref = ephem.degrees('0:1.2')
+## Set up free parameters
+ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
 arc_ref = random.choice(['on', 'off'])
-eyeht_ref = 15
-limb_ref = 'LL'
-
+eyeht_ref = round(random.uniform(1,15), 1)
+limb_ref = random.choice(['LL', 'UL'])
 print "IE", ie_ref, arc_ref, "the arc. Eye", eyeht_ref, "meters. Sun", limb_ref
 print
 
+## Set up date- and secret-location-specific back-calculations
+jackson.date = datelist[0]
+refsun = ephem.Sun(jackson)
 hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, datelist[0], limb_ref)
+print "hs", hs_1
+
+## Do sight reduction
 ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
 ho_1 = ho(ha_1, ephem.Date(datelist[0]), limb_ref)
-print "hs", hs_1
 print "ha", ha_1
 print "ho", ho_1
 print
@@ -54,4 +57,3 @@ for p in [jackson, ap]:
     dir2 = ephem.degrees(s.az + pi/2)
     print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
     print
-    
