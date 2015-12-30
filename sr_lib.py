@@ -2,6 +2,10 @@ from math import sin, cos, tan, asin, acos, pi, sqrt, atan2
 import ephem
 
 def altazimuth(gha, dec, long, lat):
+    """Translate Sun's GHA and Dec, plus our position, to Hc and Z.
+
+    Follows the trigonometric procedure in Nautical Almanac.
+    """
     ## Step 1
     lha = ephem.degrees(gha + long)
     ## Step 2
@@ -23,6 +27,7 @@ def altazimuth(gha, dec, long, lat):
     return dict(Hc=Hc, Z=Z)
 
 def almanac(date):
+    """Return the GHA and Dec of the sun for a given date."""
     place = ephem.Observer()
     place.lat = '45.0'
     place.lon = '-90.0'
@@ -34,28 +39,45 @@ def almanac(date):
     return dict(gha=gha_ephem, dec=dec_ephem)
 
 def refraction(app_alt):
-    """http://shipofficer.com/so/wp-content/uploads/2015/02/17.-Altitude.pdf"""
+    """Calculate atmospheric refraction of a body, given its apparent
+    altitude.
+
+    This is part of going from Ha to Ho.
+
+    Source:
+    http://shipofficer.com/so/wp-content/uploads/2015/02/17.-Altitude.pdf
+    """
     assert type(app_alt) == ephem.Angle
     if app_alt <= ephem.degrees('11'):
         raise RefractionError(ephem.degrees(app_alt))
     minutes = 0.96 / tan(app_alt)
     r = ephem.degrees((minutes / 60 / 360) * (2 * pi))
-#    if app_alt < ephem.degrees('11'):
-#        r = 0
-#        print "\t*** ",
-#    print "\talt", app_alt, "r", r
     return r
 
 def parallax(alt):
+    """Calculate parallax of the sun, given its apparent altitude.
+
+    This is part of going from Ha to Ho.
+    """
     assert type(alt) == ephem.Angle
     HP = ephem.earth_radius / ephem.meters_per_au
     return ephem.degrees(asin(sin(HP) * cos(alt)))
 
 def sd(date):
+    """Return semi-diameter of the sun on a given date.
+
+    This is part (in fact the most significant part) of going from Ha
+    to Ho.
+    """
     assert type(date) == ephem.Date
     return ephem.Sun(date).radius
 
 def ho(ha, date, limb):
+    """Perform altitude correction for a sun sight.
+
+    In other words, translate from Ha to Ho. This does the same that
+    the 'yellow sheet' of the Nautical Almanac does.
+    """
     assert limb == 'LL' or limb == 'UL'
     if limb == 'LL':
         semi_diam = sd(date)
@@ -64,10 +86,17 @@ def ho(ha, date, limb):
     return ephem.degrees(ha + parallax(ha) - refraction(ha) + semi_diam)
 
 def minute(x):
-    """express an input angle in decimal minutes"""
+    """Express an input angle in decimal minutes.
+
+    Useful for debugging things like Hs --> Ha, or Ha --> Ho.
+    """
     return x / (2*pi) * 360 * 60
 
 def ha(hs, ie, arc, height_m):
+    """Correct a sextant reading for instrument error and eye height.
+
+    In other words, go from Hs to Ho.
+    """
     assert arc == 'on' or arc == 'off'
     assert type(hs) == type(ie) == ephem.Angle
     if arc == 'on':
@@ -76,6 +105,16 @@ def ha(hs, ie, arc, height_m):
     return ephem.degrees(hs + ie + dip)
 
 def ho2hs(ho, ie, arc, height_m, date_str, limb):
+    """Determine sextant reading Hs by back-calculation from Ho and free
+    parameters.
+
+    Not much use for 'real' navigation: only for posing navigation
+    problems to student. It is worth noting that I DO NOT use proper
+    inverse functions of refraction() or parallax(). I use the
+    original functions, which results in only an approximation. Sort
+    of like saying $100 plus 1% = $101, whereas $101 minus 1% is 99.99
+    but close enough for our purposes.
+    """
     ## setup
     assert limb == 'LL' or limb == 'UL'
     date = ephem.Date(date_str)
@@ -92,13 +131,39 @@ def ho2hs(ho, ie, arc, height_m, date_str, limb):
     return ephem.degrees(hs)
 
 def intercept(ho, hc):
+    """Calculate intercept by comparing Ho and Hc.
+
+    Simple subtraction. Number of minutes would equal number of
+    nautical miles. Function also tells which direction the intercept
+    is relative to Gp (the point on the Earth which is directly under
+    the Sun). The function tells you the result of the HOMOTO
+    mnemonic, if you will. Intercept is the point through which the
+    line of position (LOP, or technically a circle of position)
+    passes.
+    """
     if ho > hc:
         return [ephem.degrees(ho - hc), 'Toward Gp']
     else:
         return [ephem.degrees(hc - ho), 'Away from Gp']
 
 def destination(p1, l1, t, d):
-    # p1 phi1 lat. l1 lambda1 long. t theta heading. d angular dist.
+    """Calculate destination coordinates on the Earth, given start
+    coordinates, heading, and (angular) distance.
+
+    p1 is phi_1, which is latitude.
+    l1 is lambda_1, which is longitude.
+    t is theta, which is heading.
+    d is delta, which is angular distance.
+
+    Angular distance is a little tricky but not that much. It works
+    fine if you just pass it an ephem.Angle object. A float expressing
+    radians will also work. You can use the 1 nm = 1 min trick by
+    passing something like ephem.degrees('0:1'), but it should be
+    clear that you can't just pass in a float equal to nm or minutes,
+    because those aren't the right units. It expects radians, not
+    minutes, and 1 min = about 0.0003 radians.)
+    """
+    # 
     # http://www.movable-type.co.uk/scripts/latlong.html
     # Chris Veness; MIT License
     p2 = asin(sin(p1) * cos(d) + cos(p1) * sin(d) * cos(t))
@@ -109,7 +174,12 @@ def destination(p1, l1, t, d):
     return dest
 
 def roundup_deg(angle):
-    """what do I add to this to make it integer degrees?"""
+    """Answers the question 'What do I add to this angle to make it
+    integer degrees?'
+
+    Used for calculating assumed longitude in order to get an integer
+    LHA.
+    """
     dms = str(angle).split(':')
     min_sec_only = ephem.degrees(':'.join(['0', dms[1], dms[2]]))
     if angle < 0:
@@ -127,7 +197,21 @@ def deg(angle):
     return int(dms[0])
 
 def ho249(lat, dec, lha):
-    # vol 3: lat 39-89, decl 0-29
+    """Determine (uncorrected) Hc and Z from an extremely limited excerpt
+    of HO-249.
+
+    In brief, perform a reduction to altitude and azimuth, or solve
+    the navigational triangle. Arguments are latitude, declination of
+    sun, and LHA (just like HO-249). All of them will be truncated to
+    integer degrees (just like HO-249). In any case, you should be
+    using an Assumed Latitude, which should be an integer to begin
+    which, otherwise you're doing it wrong. Return value is a rather
+    bare-bones list [Hc_degrees, Hc_minutes, d, Z, Zn]. 'Little d' is
+    one argument you need to enter the correction table, to correct Hc
+    for minutes of the body's declination.
+
+    Source is vol. 3 of HO-249, which covers lat 39-89, and decl 0-29.
+    """
     H = []
     if (lat < 0 and dec < 0) or (lat > 0 and dec > 0):
         name = 'same'
@@ -136,8 +220,6 @@ def ho249(lat, dec, lha):
     lat_a = abs(deg(lat))
     dec_a = abs(deg(dec))
     lha_a = deg(lha)
-#    print ("\tlat " + str(lat_a) + ", dec " + str(dec_a) + ' ' + name +
-#           ", lha " + str(lha_a) + '.')
     H = [None, None, None, None]
     if lat_a == 42:
         if name == 'contrary':
@@ -164,11 +246,16 @@ def ho249(lat, dec, lha):
         else:
             Zn = 180 + H[3]
     H.append(Zn)
-#    print "\tH", H
     return H
 
 def ho_correction(H, dec):
-#    print "\tcorrecting..."
+    """Correct Hc for minutes of declination, from an extremely limited
+    excerpt of HO-249.
+
+    Source is table 5 of HO-249. First argument is a bare-bones list
+    as described in the ho249() function. From this list we will
+    extract uncorrected Hc and 'little d'.
+    """
     if H[0] == None or H[1] == None or H[2] == None:
         return None
     Hc = ephem.degrees(str(H[0]) + ':' + str(H[1]))
@@ -195,12 +282,15 @@ def ho_correction(H, dec):
     if corr == None:
         return None
     Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
-#    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
     return Hc1
 
 def ini_bearing(o, d):
-    # Adapted from code by Chris Veness
-    # github.com/chrisveness/geodesy file latlon.js
+    """Find initial bearing along great circle from origin to destination.
+
+    Uses haversine formula. 
+    Adapted from code by Chris Veness.
+    github.com/chrisveness/geodesy file latlon.js
+    """
     y = sin(d.lon - o.lon) * cos(d.lat)
     x = cos(o.lat) * sin(d.lat) - \
         sin(o.lat) * cos(d.lat) * cos(d.lon - o.lon)
