@@ -190,3 +190,12 @@ def ho_correction(H, dec):
     Hc1 = ephem.degrees(Hc + ephem.degrees('0:' + str(corr * sg)))
 #    print "\tHc", Hc, ", d", d, ", min dec", min_dec, "corr", corr, 'Hc', Hc1
     return Hc1
+
+def ini_bearing(o, d):
+    # Adapted from code by Chris Veness
+    # github.com/chrisveness/geodesy file latlon.js
+    y = sin(d.lon - o.lon) * cos(d.lat)
+    x = cos(o.lat) * sin(d.lat) - \
+        sin(o.lat) * cos(d.lat) * cos(d.lon - o.lon)
+    brng = atan2(y, x)
+    return ephem.degrees(brng).norm

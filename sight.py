@@ -2,7 +2,8 @@
 
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
-                    ho2hs, roundup_deg, int_deg, ho249, ho_correction)
+                    ho2hs, roundup_deg, int_deg, ho249, ho_correction,
+                    ini_bearing)
 from math import pi
 import random
 
@@ -79,4 +80,5 @@ for date_str in datelist:
     dir1 = ephem.degrees(s.az - pi/2)
     dir2 = ephem.degrees(s.az + pi/2)
     print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
+    print "Z from x to secret", ini_bearing(x, jackson)
     print
