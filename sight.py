@@ -40,7 +40,7 @@ for date_str in datelist:
     dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
     dr.lon += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
     
-    ap = jackson.copy() # fixme. base on dead reck.
+    ap = dr.copy() # NEW nonsecret
     ap.date = date_str
     print ap.date, "UTC"
     print "Sorta dead reck", dr.lat, dr.lon
@@ -55,8 +55,8 @@ for date_str in datelist:
     al = almanac(date_str)
     print "GHA", al['gha'], "/ Dec", al['dec']
     # AP stuff
-    ap.lat = int_deg(jackson.lat)
-    base_ap_lon = int_deg(jackson.lon)
+    ap.lat = int_deg(dr.lat) # NEW nonsecret
+    base_ap_lon = int_deg(dr.lon) # NEW nonsecret
     ap.lon = base_ap_lon + roundup_deg(al['gha'])
     print "Ass Long", ap.lon
     lha = ephem.degrees(al['gha'] + ap.lon)
