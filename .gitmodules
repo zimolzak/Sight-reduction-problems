@@ -1,0 +1,3 @@
+[submodule "haversine"]
+	path = haversine
+	url = https://github.com/zimolzak/haversine.git
