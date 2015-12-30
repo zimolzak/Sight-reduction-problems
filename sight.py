@@ -3,11 +3,16 @@
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
                     ho2hs, roundup_deg, int_deg, ho249, ho_correction,
-                    ini_bearing)
+                    ini_bearing, RefractionError)
 from math import pi
 import random
 
 n_dates = 3
+
+### start loop here
+
+valid_parameters = None
+
 datelist = ['2016/01/12 14:00:00']
 
 #randomize the initial date
@@ -25,8 +30,8 @@ while len(datelist) < n_dates:
 
 # Secret true coordinates
 jackson = ephem.Observer()
-jackson.lat = '42.2458' # FIXME - change to random
-jackson.lon = '-84.4014' # FIXME - change to random
+jackson.lat = str(random.uniform(-64,64)) # keep S of Reykjavik
+jackson.lon = str(random.uniform(-180, 180))
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
@@ -43,7 +48,14 @@ for date_str in datelist:
     ## Set up date- and secret-location-specific back-calculations
     jackson.date = date_str
     refsun = ephem.Sun(jackson) #secret
-    hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref, date_str, limb_ref)
+    try:
+        hs_1 = ephem.degrees(0)
+        hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref,
+                     date_str, limb_ref)
+    except RefractionError as err:
+        print "*** Will need to try again. Sun too low at this place/time. ***"
+        print "\t", err
+        valid_parameters = False
     print "PROBLEM ----"
     print "Hs", hs_1
     print ("IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
@@ -62,7 +74,13 @@ for date_str in datelist:
     ## Do sight reduction
     print "SOLUTION ----"
     ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
-    ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
+    try:
+        ho_1 = ephem.degrees(0)
+        ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
+    except RefractionError as err:
+        print "*** Can't calculate an Ho. Intercept not valid. ***"
+        print "\t", err
+        valid_parameters = False
     print "Ha", ha_1
     print "Ho", ho_1
     al = almanac(date_str)
@@ -99,3 +117,9 @@ for date_str in datelist:
     new_secret = destination(jackson.lat, jackson.lon, heading, d_ang)
     jackson.lat = new_secret.lat
     jackson.lon = new_secret.lon
+
+if valid_parameters == None:
+    valid_parameters = True # only reaches here if SR succeeds everywhere.
+
+print
+print valid_parameters
