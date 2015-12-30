@@ -36,7 +36,8 @@ def almanac(date):
 def refraction(app_alt):
     """http://shipofficer.com/so/wp-content/uploads/2015/02/17.-Altitude.pdf"""
     assert type(app_alt) == ephem.Angle
-    assert app_alt > ephem.degrees('11')
+    if app_alt <= ephem.degrees('11'):
+        raise RefractionError(ephem.degrees(app_alt))
     minutes = 0.96 / tan(app_alt)
     r = ephem.degrees((minutes / 60 / 360) * (2 * pi))
 #    if app_alt < ephem.degrees('11'):
@@ -205,3 +206,9 @@ def ini_bearing(o, d):
         sin(o.lat) * cos(d.lat) * cos(d.lon - o.lon)
     brng = atan2(y, x)
     return ephem.degrees(brng).norm
+
+class RefractionError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return "Can't calculate refraction; alt. too low: " + str(self.value)
