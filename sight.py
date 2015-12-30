@@ -25,16 +25,16 @@ while len(datelist) < n_dates:
 
 # Secret true coordinates
 jackson = ephem.Observer()
-jackson.lat = '42.2458'
-jackson.lon = '-84.4014'
+jackson.lat = '42.2458' # FIXME - change to random
+jackson.lon = '-84.4014' # FIXME - change to random
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
-## Set up free parameters
+## Set up (random) free parameters
 ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
 arc_ref = random.choice(['on', 'off'])
 eyeht_ref = round(random.uniform(1,15), 1)
-limb_ref = random.choice(['LL', 'UL'])
+limb_ref = random.choice(['LL', 'UL', 'LL', 'LL'])
 
 general_direction = ephem.degrees(random.uniform(0, 2*pi))
 
@@ -73,7 +73,7 @@ for date_str in datelist:
     ap.lon = base_ap_lon + roundup_deg(al['gha'])
     print "Ass Long", ap.lon
     lha = ephem.degrees(al['gha'] + ap.lon)
-    print "LHA", lha
+    print "LHA", lha.norm
     # Solve the triangle for AP
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
