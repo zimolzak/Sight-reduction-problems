@@ -8,12 +8,20 @@ from math import pi
 import random
 
 n_dates = 3
-datelist = ['2016/01/12 18:00:00']
+datelist = ['2016/01/12 14:00:00']
+
+#randomize the initial date
+curr_date = ephem.Date(datelist[0])
+days = random.randint(1, 270)
+mins = random.uniform(0, 60)
+datelist[0] = ephem.Date(days + mins * ephem.minute + curr_date)
+
+# Make up some further dates
 while len(datelist) < n_dates:
     prev_date = ephem.Date(datelist[-1])
     elapsed = random.normalvariate(1, (10/60.0) / 2.576)
     curr_date = ephem.Date(elapsed * ephem.hour + prev_date)
-    datelist.append(curr_date)
+    datelist.append(str(curr_date))
 
 # Secret true coordinates
 jackson = ephem.Observer()
@@ -29,7 +37,6 @@ eyeht_ref = round(random.uniform(1,15), 1)
 limb_ref = random.choice(['LL', 'UL'])
 
 general_direction = ephem.degrees(random.uniform(0, 2*pi))
-print "gd", general_direction
 
 for date_str in datelist:
 

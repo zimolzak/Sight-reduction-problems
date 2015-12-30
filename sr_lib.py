@@ -38,7 +38,12 @@ def refraction(app_alt):
     assert type(app_alt) == ephem.Angle
     assert app_alt > ephem.degrees('11')
     minutes = 0.96 / tan(app_alt)
-    return ephem.degrees((minutes / 60 / 360) * (2 * pi))
+    r = ephem.degrees((minutes / 60 / 360) * (2 * pi))
+#    if app_alt < ephem.degrees('11'):
+#        r = 0
+#        print "\t*** ",
+#    print "\talt", app_alt, "r", r
+    return r
 
 def parallax(alt):
     assert type(alt) == ephem.Angle
