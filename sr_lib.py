@@ -58,6 +58,7 @@ def ho(ha, date, limb):
     return ephem.degrees(ha + parallax(ha) - refraction(ha) + semi_diam)
 
 def minute(x):
+    """express an input angle in decimal minutes"""
     return x / (2*pi) * 360 * 60
 
 def ha(hs, ie, arc, height_m):
