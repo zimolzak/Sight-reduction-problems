@@ -17,15 +17,14 @@ jackson.lon = '-84.4014'
 jackson.pressure = 0
 jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
 
-degree_variate = ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
-# 2.576 SD = 99% of all variates (between -1 and 1 deg).
-print degree_variate
-
 ## Set up free parameters
 ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
 arc_ref = random.choice(['on', 'off'])
 eyeht_ref = round(random.uniform(1,15), 1)
 limb_ref = random.choice(['LL', 'UL'])
+
+general_direction = ephem.degrees(random.uniform(0, 2*pi))
+print "gd", general_direction
 
 for date_str in datelist:
 
@@ -39,12 +38,13 @@ for date_str in datelist:
            str(eyeht_ref) + " meters. Sun " + limb_ref + '.')
     dr = jackson.copy() # soon to be non-secret
     dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
+    # 2.576 SD = 99% of all variates (between -1 and 1 deg).
     dr.lon += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
     
     ap = dr.copy() # NEW nonsecret
     ap.date = date_str
     print ap.date, "UTC"
-    print "Sorta dead reck", dr.lat, dr.lon
+    print "Dead reckoning position", dr.lat, dr.lon
     print
     
     ## Do sight reduction
@@ -66,9 +66,9 @@ for date_str in datelist:
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
-    H = ho249(ap.lat, al['dec'], lha)
-    Hc_final = ho_correction(H, al['dec'])
-    print "Hc", Hc_final, "/ Zn", H[4], "(from HO-249!)"
+#    H = ho249(ap.lat, al['dec'], lha)
+#    Hc_final = ho_correction(H, al['dec'])
+#    print "Hc", Hc_final, "/ Zn", H[4], "(from HO-249!)"
     # Go from AP to real P
     I = intercept(ho_1, s.alt)
     print "Intercept", I
@@ -82,3 +82,11 @@ for date_str in datelist:
     print "LOP thru", x.lat, x.lon, "in the", dir1.norm, dir2.norm, "direction"
     print "Z from x to secret", ini_bearing(x, jackson)
     print
+    # update secret coords
+    heading = ephem.degrees(general_direction +
+               ephem.degrees(str(random.normalvariate(0, 10 / 2.576))))
+    distance = random.normalvariate(4.5, 2.5 / 2.576) # nm or min
+    d_ang = ephem.degrees('0:' + str(distance))
+    new_secret = destination(jackson.lat, jackson.lon, heading, d_ang)
+    jackson.lat = new_secret.lat
+    jackson.lon = new_secret.lon
