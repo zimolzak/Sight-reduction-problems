@@ -7,8 +7,13 @@ from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
 from math import pi
 import random
 
-datelist = ['2016/01/12 18:00:00', '2016/01/12 19:00:00',
-            '2016/01/12 20:00:00', '2016/01/12 21:00:00']
+n_dates = 3
+datelist = ['2016/01/12 18:00:00']
+while len(datelist) < n_dates:
+    prev_date = ephem.Date(datelist[-1])
+    elapsed = random.normalvariate(1, (10/60.0) / 2.576)
+    curr_date = ephem.Date(elapsed * ephem.hour + prev_date)
+    datelist.append(curr_date)
 
 # Secret true coordinates
 jackson = ephem.Observer()
@@ -66,9 +71,6 @@ for date_str in datelist:
     print "calculating at AP", ap.lat, ap.lon
     s = ephem.Sun(ap)
     print "Hc", s.alt, "/ Z", s.az
-#    H = ho249(ap.lat, al['dec'], lha)
-#    Hc_final = ho_correction(H, al['dec'])
-#    print "Hc", Hc_final, "/ Zn", H[4], "(from HO-249!)"
     # Go from AP to real P
     I = intercept(ho_1, s.alt)
     print "Intercept", I
