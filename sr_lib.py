@@ -134,12 +134,12 @@ def intercept(ho, hc):
     """Calculate intercept by comparing Ho and Hc.
 
     Simple subtraction. Number of minutes would equal number of
-    nautical miles. Function also tells which direction the intercept
-    is relative to Gp (the point on the Earth which is directly under
-    the Sun). The function tells you the result of the HOMOTO
-    mnemonic, if you will. Intercept is the point through which the
-    line of position (LOP, or technically a circle of position)
-    passes.
+    nautical miles. Function also returns a list telling which
+    direction the intercept is relative to Gp (the point on the Earth
+    which is directly under the Sun). The function tells you the
+    result of the HOMOTO mnemonic, if you will. Intercept is the point
+    through which the line of position (LOP, or technically a circle
+    of position) passes.
     """
     if ho > hc:
         return [ephem.degrees(ho - hc), 'Toward Gp']

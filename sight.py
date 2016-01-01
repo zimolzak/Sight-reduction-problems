@@ -61,9 +61,9 @@ while not valid_parameters:
             print "*** Will need to try again. Sun too low here/now. ***"
             print "\t" + str(err)
             valid_parameters = False
-        print "PROBLEM ----"
-        print "Hs " + str(hs_1)
-        print ("IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
+        print "Problem\n--------"
+        print "* Hs " + str(hs_1)
+        print ("* IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
                str(eyeht_ref) + " meters. Sun " + limb_ref + '.')
         dr = jackson.copy() # soon to be non-secret
         dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
@@ -72,13 +72,13 @@ while not valid_parameters:
         
         ap = dr.copy()
         ap.date = date_str
-        print str(ap.date) + " UTC"
-        print "Dead reckoning position " + str(dr.lat) + ' ' + str(dr.lon)
+        print '* ' + str(ap.date) + " UTC"
+        print "* Dead reckoning position " + str(dr.lat) + ' ' + str(dr.lon)
         print
         
         ## Do sight reduction, to find solution to problem.
         
-        print "SOLUTION ----"
+        print "Solution\n--------"
         ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
         try:
             ho_1 = ephem.degrees(0)
@@ -87,24 +87,24 @@ while not valid_parameters:
             print "*** Can't calculate an Ho. Intercept not valid. ***"
             print "\t " + str(err)
             valid_parameters = False
-        print "Ha " + str(ha_1)
-        print "Ho " + str(ho_1)
+        print "* Ha " + str(ha_1)
+        print "* Ho " + str(ho_1)
         al = almanac(date_str)
-        print "GHA " + str(al['gha']) + " / Dec " + str(al['dec'])
+        print "* GHA " + str(al['gha']) + " / Dec " + str(al['dec'])
         # Choose an AP
         ap.lat = int_deg(dr.lat) # FIXME - more logical to round not int().
         base_ap_lon = int_deg(dr.lon)
         ap.lon = base_ap_lon + roundup_deg(al['gha'])
-        print "Ass Long " + str(ap.lon)
+        print "* Ass Long " + str(ap.lon)
         lha = ephem.degrees(al['gha'] + ap.lon)
-        print "LHA " + str(lha.norm)
+        print "* LHA " + str(lha.norm)
         # Solve the triangle, given our AP
-        print "calculating at AP " + str(ap.lat) + ' ' + str(ap.lon)
+        print "* calculating at AP " + str(ap.lat) + ' ' + str(ap.lon)
         s = ephem.Sun(ap)
-        print "Hc " + str(s.alt) + " / Z " + str(s.az)
+        print "* Hc " + str(s.alt) + " / Z " + str(s.az)
         # Go from AP to real P
         I = intercept(ho_1, s.alt)
-        print "Intercept " + str(I[0]) + ' ' + I[1]
+        print "* Intercept " + str(I[0]) + ' ' + I[1]
         if I[1][0] == 'A':
             theta = s.az - pi
         elif I[1][0] == 'T':
@@ -112,9 +112,9 @@ while not valid_parameters:
         x = destination(ap.lat, ap.lon, theta, I[0])
         dir1 = ephem.degrees(s.az - pi/2)
         dir2 = ephem.degrees(s.az + pi/2)
-        print("LOP thru " + str(x.lat) + ' ' + str(x.lon) + " in the " + 
+        print("* LOP thru " + str(x.lat) + ' ' + str(x.lon) + " in the " + 
               str(dir1.norm) + ' ' + str(dir2.norm) + " direction")
-        print "Z from x to secret " + str(ini_bearing(x, jackson))
+        print "* Z from x to secret " + str(ini_bearing(x, jackson))
         print
         
         ## Update the secret coordinates.
