@@ -140,4 +140,4 @@ for fix in range(1, n_fixes + 1):
             print
             print sights_string
         elif valid_parameters == False:
-            print "Guessing new parameters..."
+            print "    Guessing new parameters..."
