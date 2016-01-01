@@ -104,8 +104,8 @@ for fix in range(1, n_fixes + 1):
             lha = ephem.degrees(al['gha'] + ap.lon)
             text += "* LHA " + str(lha.norm) + "\n"
             # Solve the triangle (for Hc and Z), given our AP.
-            text += ("* calculating at AP " + str(ap.lat) + ' ' +
-                              str(ap.lon) + "\n")
+            text += ("* Calculating at AP " + str(ap.lat) + ' ' +
+                              str(ap.lon) + ".\n")
             s = ephem.Sun(ap)
             text += "* Hc " + str(s.alt) + " / Z " + str(s.az) + "\n"
             # Go from AP to real position (technically *line* of position).
