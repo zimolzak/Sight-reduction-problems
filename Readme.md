@@ -21,136 +21,137 @@ navigation to practice doing the calculations themselves.
 
 
 
-    Guessing new parameters...
-    Guessing new parameters...
-    Guessing new parameters...
-    Guessing new parameters...
-    Guessing new parameters...
-
 Fix number 1
 ========
 
 Problem
 --------
-* Hs 55:33:36.1
-* IE 0:02:33.3 on the arc. Eye 8.3 meters. Sun UL.
-* 2016/1/21 14:41:21 UTC
-* Dead reckoning position -54:33:30.2 -38:47:56.6
+* Hs 57:11:42.8
+* IE 0:00:58.5 on the arc. Eye 6.7 meters. Sun LL.
+* 2016/5/23 14:25:42 UTC
+* Dead reckoning position 46:50:23.9 -13:04:59.4
 
 Solution
 --------
-* Ha 55:25:58.9
-* Ho 55:09:09.0
-* GHA 37:32:18.5 / Dec -19:56:12.9
-* Ass Long -37:32:18.5
-* LHA 360:00:00.0
-* calculating at AP -54:00:00.0 -37:32:18.5
-* Hc 55:56:00.7 / Z 359:59:51.1
-* Intercept 0:46:51.7 Away from Gp
-* LOP thru -54:46:51.7 -37:32:18.3 in the 269:59:51.1 89:59:51.1 direction
-* Z from x to secret 270:40:13.6
+* Ha 57:06:11.2
+* Ho 57:21:26.4
+* GHA 37:13:47.5 / Dec 20:43:43.9
+* Ass Long -12:13:47.5
+* LHA 25:00:00.0
+* calculating at AP 46:00:00.0 -12:13:47.5
+* Hc 57:30:09.9 / Z 227:22:16.8
+* Intercept 0:08:43.5 Away from Gp
+* LOP thru 46:05:54.2 -12:04:32.0 in the 137:22:16.8 317:22:16.8 direction
+* Z from x to secret 316:58:52.3
+* True coords 46:33:29.9 -12:42:07.3
 
 Problem
 --------
-* Hs 54:28:52.7
-* IE 0:02:33.3 on the arc. Eye 8.3 meters. Sun UL.
-* 2016/1/21 15:34:30 UTC
-* Dead reckoning position -54:41:40.7 -39:07:00.8
+* Hs 49:01:29.6
+* IE 0:00:58.5 on the arc. Eye 6.7 meters. Sun LL.
+* 2016/5/23 15:23:58 UTC
+* Dead reckoning position 46:43:28.9 -13:12:37.8
 
 Solution
 --------
-* Ha 54:21:15.5
-* Ho 54:04:24.2
-* GHA 50:49:25.2 / Dec -19:55:43.8
-* Ass Long -38:49:25.2
-* LHA 12:00:00.0
-* calculating at AP -54:00:00.0 -38:49:25.2
-* Hc 54:42:32.8 / Z 340:13:19.1
-* Intercept 0:38:08.6 Away from Gp
-* LOP thru -54:35:51.6 -38:27:08.4 in the 250:13:19.1 70:13:19.1 direction
-* Z from x to secret 250:16:24.1
+* Ha 48:55:58.0
+* Ho 49:11:01.3
+* GHA 51:47:38.5 / Dec 20:44:11.4
+* Ass Long -12:47:38.5
+* LHA 39:00:00.0
+* calculating at AP 46:00:00.0 -12:47:38.5
+* Hc 49:25:31.3 / Z 244:48:35.1
+* Intercept 0:14:30.1 Away from Gp
+* LOP thru 46:06:08.8 -12:28:43.0 in the 154:48:35.1 334:48:35.1 direction
+* Z from x to secret 334:46:31.8
+* True coords 46:29:05.7 -12:44:25.8
 
 Problem
 --------
-* Hs 50:27:08.6
-* IE 0:02:33.3 on the arc. Eye 8.3 meters. Sun UL.
-* 2016/1/21 16:32:00 UTC
-* Dead reckoning position -54:49:34.6 -39:15:07.2
+* Hs 39:06:44.8
+* IE 0:00:58.5 on the arc. Eye 6.7 meters. Sun LL.
+* 2016/5/23 16:25:00 UTC
+* Dead reckoning position 46:14:54.4 -13:01:40.5
 
 Solution
 --------
-* Ha 50:19:31.4
-* Ho 50:02:34.1
-* GHA 65:11:46.6 / Dec -19:55:12.2
-* Ass Long -38:11:46.6
-* LHA 27:00:00.0
-* calculating at AP -54:00:00.0 -38:11:46.6
-* Hc 50:10:22.7 / Z 318:12:15.7
-* Intercept 0:07:48.6 Away from Gp
-* LOP thru -54:05:49.0 -38:02:54.0 in the 228:12:15.7 48:12:15.7 direction
-* Z from x to secret 228:42:48.2
+* Ha 39:01:13.3
+* Ho 39:15:56.7
+* GHA 67:03:06.6 / Dec 20:44:40.1
+* Ass Long -12:03:06.6
+* LHA 55:00:00.0
+* calculating at AP 46:00:00.0 -12:03:06.6
+* Hc 38:51:24.6 / Z 259:39:33.2
+* Intercept 0:24:32.0 Toward Gp
+* LOP thru 45:55:30.5 -12:37:48.4 in the 169:39:33.2 349:39:33.2 direction
+* Z from x to secret 349:00:53.5
+* True coords 46:25:57.7 -12:46:23.1
 
 
+    Guessing new parameters...
 
 Fix number 2
 ========
 
 Problem
 --------
-* Hs 58:02:15.2
-* IE 0:01:22.3 on the arc. Eye 14.0 meters. Sun UL.
-* 2016/4/23 14:44:23 UTC
-* Dead reckoning position -19:24:12.6 -42:21:21.3
+* Hs 63:45:10.1
+* IE 0:00:04.7 off the arc. Eye 5.2 meters. Sun LL.
+* 2016/9/27 14:08:51 UTC
+* Dead reckoning position 7:09:36.3 -9:58:18.1
 
 Solution
 --------
-* Ha 57:54:18.2
-* Ho 57:37:52.5
-* GHA 401:32:29.3 / Dec 12:48:15.3
-* Ass Long -41:32:29.3
-* LHA 360:00:00.0
-* calculating at AP -19:00:00.0 -41:32:29.3
-* Hc 58:11:35.0 / Z 359:59:51.3
-* Intercept 0:33:42.5 Away from Gp
-* LOP thru -19:33:42.5 -41:32:29.2 in the 269:59:51.3 89:59:51.3 direction
-* Z from x to secret 270:56:20.2
+* Ha 63:41:14.3
+* Ho 63:56:47.3
+* GHA 34:31:02.8 / Dec -1:56:43.2
+* Ass Long -8:31:02.8
+* LHA 26:00:00.0
+* calculating at AP 7:00:00.0 -8:31:02.8
+* Hc 62:33:06.6 / Z 251:54:31.1
+* Intercept 1:23:40.6 Toward Gp
+* LOP thru 6:33:54.3 -9:51:06.7 in the 161:54:31.1 341:54:31.1 direction
+* Z from x to secret 340:57:18.7
+* True coords 7:17:55.7 -10:06:26.0
 
 Problem
 --------
-* Hs 55:02:00.9
-* IE 0:01:22.3 on the arc. Eye 14.0 meters. Sun UL.
-* 2016/4/23 15:46:47 UTC
-* Dead reckoning position -19:57:28.1 -42:20:43.5
+* Hs 49:28:43.9
+* IE 0:00:04.7 off the arc. Eye 5.2 meters. Sun LL.
+* 2016/9/27 15:08:39 UTC
+* Dead reckoning position 7:36:51.2 -10:16:04.3
 
 Solution
 --------
-* Ha 54:54:03.9
-* Ho 54:37:34.2
-* GHA 417:08:37.2 / Dec 12:49:07.0
-* Ass Long -41:08:37.2
-* LHA 16:00:00.0
-* calculating at AP -19:00:00.0 -41:08:37.2
-* Hc 54:29:10.4 / Z 332:26:14.9
-* Intercept 0:08:23.8 Toward Gp
-* LOP thru -18:52:33.3 -41:12:43.6 in the 242:26:14.9 62:26:14.9 direction
-* Z from x to secret 243:36:41.1
+* Ha 49:24:48.0
+* Ho 49:40:02.0
+* GHA 49:28:11.9 / Dec -1:57:41.4
+* Ass Long -9:28:11.9
+* LHA 40:00:00.0
+* calculating at AP 7:00:00.0 -9:28:11.9
+* Hc 49:05:09.0 / Z 258:47:47.8
+* Intercept 0:34:53.0 Toward Gp
+* LOP thru 6:53:12.1 -10:02:39.9 in the 168:47:47.8 348:47:47.8 direction
+* Z from x to secret 348:30:14.3
+* True coords 7:13:58.8 -10:06:55.5
 
 Problem
 --------
-* Hs 47:22:54.2
-* IE 0:01:22.3 on the arc. Eye 14.0 meters. Sun UL.
-* 2016/4/23 16:43:46 UTC
-* Dead reckoning position -19:44:01.4 -42:14:14.7
+* Hs 35:32:58.4
+* IE 0:00:04.7 off the arc. Eye 5.2 meters. Sun LL.
+* 2016/9/27 16:05:40 UTC
+* Dead reckoning position 6:55:35.0 -10:11:58.5
 
 Solution
 --------
-* Ha 47:14:57.3
-* Ho 46:58:15.8
-* GHA 71:23:30.2 / Dec 12:49:54.1
-* Ass Long -41:23:30.2
-* LHA 30:00:00.0
-* calculating at AP -19:00:00.0 -41:23:30.2
-* Hc 46:33:23.6 / Z 314:50:47.7
-* Intercept 0:24:52.2 Toward Gp
-* LOP thru -18:42:26.7 -41:42:07.2 in the 224:50:47.7 44:50:47.7 direction
-* Z from x to secret 225:39:49.8
+* Ha 35:29:02.6
+* Ho 35:43:46.5
+* GHA 63:43:40.1 / Dec -1:58:36.9
+* Ass Long -9:43:40.1
+* LHA 54:00:00.0
+* calculating at AP 6:00:00.0 -9:43:40.1
+* Hc 35:29:27.9 / Z 263:15:04.4
+* Intercept 0:14:18.6 Toward Gp
+* LOP thru 5:58:18.9 -9:57:57.4 in the 173:15:04.4 353:15:04.4 direction
+* Z from x to secret 352:47:12.7
+* True coords 7:09:30.9 -10:07:02.3
