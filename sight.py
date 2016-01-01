@@ -7,57 +7,55 @@ from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
 from math import pi
 import random
 
-n_dates = 3
-
+sights_per_fix = 3
 valid_parameters = False
 
 while not valid_parameters:
 
     valid_parameters = None
-    sights_string = ''
-    
+    sights_string = '' # A buffer that we print only if no errors occur.
     datelist = ['2016/01/12 14:00:00']
     
-    #randomize the initial date
+    # Randomize the initial date.
     curr_date = ephem.Date(datelist[0])
     days = random.randint(1, 270)
     mins = random.uniform(0, 60)
     datelist[0] = ephem.Date(days + mins * ephem.minute + curr_date)
     
-    # Make up some further dates
-    while len(datelist) < n_dates:
+    # Make up some further sight times about an hour apart.
+    while len(datelist) < sights_per_fix:
         prev_date = ephem.Date(datelist[-1])
         elapsed = random.normalvariate(1, (10/60.0) / 2.576)
         curr_date = ephem.Date(elapsed * ephem.hour + prev_date)
         datelist.append(str(curr_date))
     
-    # Secret true coordinates
+    # Secret true coordinates.
     jackson = ephem.Observer()
     jackson.lat = str(random.uniform(-64,64)) # keep S of Reykjavik
     jackson.lon = str(random.uniform(-180, 180))
     jackson.pressure = 0
     jackson.elevation = 303.9 # meters = 997 feet. Doesn't affect sun much.
     
-    ## Set up (random) free parameters
+    # Set up the remaining (random) free parameters.
     ie_ref = ephem.degrees(str(random.uniform(0,3) / 60))
     arc_ref = random.choice(['on', 'off'])
     eyeht_ref = round(random.uniform(1,15), 1)
     limb_ref = random.choice(['LL', 'UL', 'LL', 'LL'])
-    
     general_direction = ephem.degrees(random.uniform(0, 2*pi))
     
     for date_str in datelist:
     
         ## Pose problem by doing date- and secret-location-specific
         ## back-calculations.
-        
+
+        # Back-calculate Hs.
         jackson.date = date_str
         refsun = ephem.Sun(jackson) #secret
         try:
             hs_1 = ephem.degrees(0)
             hs_1 = ho2hs(refsun.alt, ie_ref, arc_ref, eyeht_ref,
                          date_str, limb_ref)
-            # hs_1 is nonsecret but will let us derive the secret.
+            # hs_1 is nonsecret but will let student derive the secret.
         except RefractionError as err:
             valid_parameters = False
         sights_string += "Problem\n--------\n"
@@ -65,11 +63,11 @@ while not valid_parameters:
         sights_string += ("* IE " + str(ie_ref) + ' ' + arc_ref +
                           " the arc. Eye " + str(eyeht_ref) +
                           " meters. Sun " + limb_ref + ".\n")
+        # Fuzz the secret true coordinates to make DR position.
         dr = jackson.copy() # soon to be non-secret
         dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
         # 2.576 SD = 99% of all variates (between -1 and 1 deg).
         dr.lon += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
-        
         ap = dr.copy()
         ap.date = date_str
         sights_string += '* ' + str(ap.date) + " UTC\n"
@@ -78,7 +76,8 @@ while not valid_parameters:
         sights_string += "\n"
         
         ## Do sight reduction, to find solution to problem.
-        
+
+        # Forward-calculate Hs --> Ha --> Ho
         sights_string += "Solution\n--------\n"
         ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
         try:
@@ -88,22 +87,23 @@ while not valid_parameters:
             valid_parameters = False
         sights_string += "* Ha " + str(ha_1) + "\n"
         sights_string += "* Ho " + str(ho_1) + "\n"
+        # Look up GHA and Dec of the sun.
         al = almanac(date_str)
         sights_string += ("* GHA " + str(al['gha']) + " / Dec " +
                           str(al['dec']) + "\n")
-        # Choose an AP
-        ap.lat = int_deg(dr.lat) # FIXME - more logical to round not int().
+        # Choose an AP.
+        ap.lat = int_deg(dr.lat) # FIXME - more logical to round, not int().
         base_ap_lon = int_deg(dr.lon)
         ap.lon = base_ap_lon + roundup_deg(al['gha'])
         sights_string += "* Ass Long " + str(ap.lon) + "\n"
         lha = ephem.degrees(al['gha'] + ap.lon)
         sights_string += "* LHA " + str(lha.norm) + "\n"
-        # Solve the triangle, given our AP
+        # Solve the triangle (for Hc and Z), given our AP.
         sights_string += ("* calculating at AP " + str(ap.lat) + ' ' +
                           str(ap.lon) + "\n")
         s = ephem.Sun(ap)
         sights_string += "* Hc " + str(s.alt) + " / Z " + str(s.az) + "\n"
-        # Go from AP to real P
+        # Go from AP to real position (technically *line* of position).
         I = intercept(ho_1, s.alt)
         sights_string += "* Intercept " + str(I[0]) + ' ' + I[1] + "\n"
         if I[1][0] == 'A':
@@ -120,7 +120,7 @@ while not valid_parameters:
                           str(ini_bearing(x, jackson)) + "\n")
         sights_string += "\n"
         
-        ## Update the secret coordinates.
+        ## Update the secret coordinates for next sight.
         
         heading = ephem.degrees(general_direction +
                    ephem.degrees(str(random.normalvariate(0, 10 / 2.576))))
