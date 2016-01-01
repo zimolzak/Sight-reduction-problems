@@ -123,6 +123,7 @@ for fix in range(1, n_fixes + 1):
                              " direction\n")
             sights_string += ("* Z from x to secret " +
                               str(ini_bearing(x, jackson)) + "\n")
+            sights_string += "* True coords " + str(jackson.lat) + ' ' + str(jackson.lon) + "\n"
             sights_string += "\n"
             
             ## Update the secret coordinates for next sight.
