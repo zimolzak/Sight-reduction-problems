@@ -59,13 +59,12 @@ while not valid_parameters:
                          date_str, limb_ref)
             # hs_1 is nonsecret but will let us derive the secret.
         except RefractionError as err:
-            print "*** Will need to try again. Sun too low here/now. ***"
-            print "\t" + str(err)
             valid_parameters = False
         sights_string += "Problem\n--------\n"
         sights_string += "* Hs " + str(hs_1) + "\n"
-        sights_string += ("* IE " + str(ie_ref) + ' ' + arc_ref + " the arc. Eye " +
-               str(eyeht_ref) + " meters. Sun " + limb_ref + ".\n")
+        sights_string += ("* IE " + str(ie_ref) + ' ' + arc_ref +
+                          " the arc. Eye " + str(eyeht_ref) +
+                          " meters. Sun " + limb_ref + ".\n")
         dr = jackson.copy() # soon to be non-secret
         dr.lat += ephem.degrees(str(random.normalvariate(0, 1 / 2.576)))
         # 2.576 SD = 99% of all variates (between -1 and 1 deg).
@@ -74,7 +73,8 @@ while not valid_parameters:
         ap = dr.copy()
         ap.date = date_str
         sights_string += '* ' + str(ap.date) + " UTC\n"
-        sights_string += "* Dead reckoning position " + str(dr.lat) + ' ' + str(dr.lon) + "\n"
+        sights_string += ("* Dead reckoning position " + str(dr.lat) +
+                          ' ' + str(dr.lon) + "\n")
         sights_string += "\n"
         
         ## Do sight reduction, to find solution to problem.
@@ -85,13 +85,12 @@ while not valid_parameters:
             ho_1 = ephem.degrees(0)
             ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
         except RefractionError as err:
-            print "*** Can't calculate an Ho. Intercept not valid. ***"
-            print "\t " + str(err)
             valid_parameters = False
         sights_string += "* Ha " + str(ha_1) + "\n"
         sights_string += "* Ho " + str(ho_1) + "\n"
         al = almanac(date_str)
-        sights_string += "* GHA " + str(al['gha']) + " / Dec " + str(al['dec']) + "\n"
+        sights_string += ("* GHA " + str(al['gha']) + " / Dec " +
+                          str(al['dec']) + "\n")
         # Choose an AP
         ap.lat = int_deg(dr.lat) # FIXME - more logical to round not int().
         base_ap_lon = int_deg(dr.lon)
@@ -100,7 +99,8 @@ while not valid_parameters:
         lha = ephem.degrees(al['gha'] + ap.lon)
         sights_string += "* LHA " + str(lha.norm) + "\n"
         # Solve the triangle, given our AP
-        sights_string += "* calculating at AP " + str(ap.lat) + ' ' + str(ap.lon) + "\n"
+        sights_string += ("* calculating at AP " + str(ap.lat) + ' ' +
+                          str(ap.lon) + "\n")
         s = ephem.Sun(ap)
         sights_string += "* Hc " + str(s.alt) + " / Z " + str(s.az) + "\n"
         # Go from AP to real P
@@ -113,9 +113,11 @@ while not valid_parameters:
         x = destination(ap.lat, ap.lon, theta, I[0])
         dir1 = ephem.degrees(s.az - pi/2)
         dir2 = ephem.degrees(s.az + pi/2)
-        sights_string +=("* LOP thru " + str(x.lat) + ' ' + str(x.lon) + " in the " + 
-              str(dir1.norm) + ' ' + str(dir2.norm) + " direction\n")
-        sights_string += "* Z from x to secret " + str(ini_bearing(x, jackson)) + "\n"
+        sights_string +=("* LOP thru " + str(x.lat) + ' ' + str(x.lon) +
+                         " in the " + str(dir1.norm) + ' ' + str(dir2.norm) +
+                         " direction\n")
+        sights_string += ("* Z from x to secret " +
+                          str(ini_bearing(x, jackson)) + "\n")
         sights_string += "\n"
         
         ## Update the secret coordinates.
@@ -128,10 +130,9 @@ while not valid_parameters:
         jackson.lat = new_secret.lat
         jackson.lon = new_secret.lon
 
-    
     if valid_parameters == None:
         valid_parameters = True # should reach only if SR succeeds everywhere.
+        print
         print sights_string
-    
-    print "Was that last set valid? " + str(valid_parameters) + " ----------------"
-    print
+    elif valid_parameters == False:
+        print "Guessing new parameters..."
