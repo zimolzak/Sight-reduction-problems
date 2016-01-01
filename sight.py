@@ -18,6 +18,7 @@ for fix in range(1, n_fixes + 1):
     
         valid_parameters = None
         sights_string = '' # A buffer that we print only if no errors occur.
+        sights_string += 'Fix number ' + str(fix) + "\n========\n\n"
         datelist = ['2016/01/12 14:00:00']
         
         # Randomize the initial date.
