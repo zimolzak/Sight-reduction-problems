@@ -7,7 +7,22 @@ from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
 from math import pi
 import random
 
-n_fixes = 2
+print """Sun Sight Reduction Practice Problems
+========
+
+by Andrew J. Zimolzak
+
+All angles are given in dd:mm:ss (degrees, minutes, seconds) format.
+The assumed position (and LHA, Hc, and Intercept) given in the
+solution is just an example. Your AP may not equal the AP that the
+machine uses, but yours should ultimately lead you to find a similar
+celestial position. That is, after working three sights, compare your
+calculated celestial position with the "True (secret) position" of
+Sight number 3, and you should be close.
+
+"""
+
+n_fixes = 20
 sights_per_fix = 3
 
 for fix in range(1, n_fixes + 1):
@@ -18,7 +33,7 @@ for fix in range(1, n_fixes + 1):
     
         valid_parameters = None
         text = '' # A buffer that we print only if no errors occur.
-        text += 'Fix number ' + str(fix) + "\n========\n\n"
+        text += 'Problem number ' + str(fix) + "\n========\n\n"
         datelist = ['2016/01/12 14:00:00']
         
         # Randomize the initial date.
@@ -48,7 +63,7 @@ for fix in range(1, n_fixes + 1):
         limb_ref = random.choice(['LL', 'UL', 'LL', 'LL'])
         general_direction = ephem.degrees(random.uniform(0, 2*pi))
         
-        for date_str in datelist:
+        for sight_num, date_str in enumerate(datelist):
         
             ## Pose problem by doing date- and secret-location-specific
             ## back-calculations.
@@ -63,7 +78,7 @@ for fix in range(1, n_fixes + 1):
                 # hs_1 is nonsecret but will let student derive the secret.
             except RefractionError as err:
                 valid_parameters = False
-            text += "Problem\n--------\n"
+            text += "Sight number " + str(sight_num + 1) + "\n--------\n"
             text += "* Hs " + str(hs_1) + "\n"
             text += ("* IE " + str(ie_ref) + ' ' + arc_ref +
                               " the arc. Eye " + str(eyeht_ref) +
@@ -97,7 +112,7 @@ for fix in range(1, n_fixes + 1):
             text += ("* GHA " + str(al['gha']) + " / Dec " +
                               str(al['dec']) + "\n")
             # Choose an AP.
-            ap.lat = int_deg(dr.lat) # FIXME - more logical to round, not int().
+            ap.lat = int_deg(dr.lat) # FIXME - better to do round, not int().
             base_ap_lon = int_deg(dr.lon)
             ap.lon = base_ap_lon + roundup_deg(al['gha'])
             text += "* Ass Long " + str(ap.lon) + "\n"
@@ -121,10 +136,11 @@ for fix in range(1, n_fixes + 1):
             text +=("* LOP thru " + str(x.lat) + ' ' + str(x.lon) +
                     " in the " + str(dir1.norm) + ' ' + str(dir2.norm) +
                     " direction\n")
-            text += ("* Z from x to secret " +
-                              str(ini_bearing(x, true)) + "\n")
-            text += ("* True coords " + str(true.lat) + ' ' +
-                     str(true.lon) + "\n")
+            text += ("* Hdg. from Intercept to true position " +
+                              str(ini_bearing(x, true)) + " (Should be "+
+                     "similar to LOP.)\n")
+            text += ("* True (secret) position is currently " +
+                     str(true.lat) + ' ' + str(true.lon) + "\n")
             text += "\n"
             
             ## Update the secret coordinates for next sight.
@@ -139,7 +155,7 @@ for fix in range(1, n_fixes + 1):
     
         if valid_parameters == None:
             valid_parameters = True # happens only if SR succeeds everywhere.
-            print
             print text
         elif valid_parameters == False:
-            print "    Guessing new parameters..."
+            #print "    Guessing new parameters..."
+            pass
