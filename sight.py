@@ -13,12 +13,13 @@ print """Sun Sight Reduction Practice Problems
 by Andrew J. Zimolzak
 
 All angles are given in dd:mm:ss (degrees, minutes, seconds) format.
-The assumed position (and LHA, Hc, and Intercept) given in the
-solution is just an example. Your AP may not equal the AP that the
-machine uses, but yours should ultimately lead you to find a similar
-celestial position. That is, after working three sights, compare your
-calculated celestial position with the "True (secret) position" of
-Sight number 3, and you should be close.
+Negative latitude means south, and negative longitude means west. The
+assumed position (and LHA, Hc, and Intercept) given in the solution is
+just an example. Your AP may not equal the AP that the machine uses,
+but yours should ultimately lead you to find a similar celestial
+position. That is, after working three sights, compare your calculated
+celestial position with the "True (secret) position" of Sight number
+3, and you should be close.
 
 """
 
