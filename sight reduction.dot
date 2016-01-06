@@ -14,7 +14,7 @@ Hc_u [label="Hc,\nuncorrected"]
 AP -> Zn
 LHA -> Zn
 
-sextant -> Hs
+Sextant -> Hs
 Hs -> HA
 IE -> HA
 Ht_of_eye -> Dip [label="Alt. corr.\ntables"]
@@ -33,8 +33,8 @@ Almanac -> d
 
 ic [label="Increments &\nCorrections" shape="rectangle"]
 min_sec -> ic
-GHA_u -> ic
-Decl_u -> ic
+GHA_u -> GHA
+Decl_u -> Decl
 d -> ic
 ic -> GHA
 ic -> Decl
@@ -61,7 +61,7 @@ HO_249 -> d2
 tab5 [label="Table 5\nof HO-249" shape="rectangle"]
 Decl_m -> tab5
 d2 -> tab5
-Hc_u -> tab5
+Hc_u -> Hc
 tab5 -> Hc
 
 Ho -> Intercept
