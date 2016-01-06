@@ -1,21 +1,22 @@
 digraph {
+
 sextant -> Hs
 Hs -> HA
 IE -> HA
+Ht_of_eye -> Dip [label="yellow"]
 Dip -> HA
-HA -> Ho
+HA -> Ho [label="yellow"]
 
-Time -> GHA
-Almanac -> GHA
-Time -> Decl
+Time -> GHA [label="Almanac"]
+Time -> Decl [label="Almanac"]
 
 DR_pos -> AP
 AP -> LHA
 GHA -> LHA
 
-AP -> Hc
-Tables -> Hc
-LHA -> Hc
+AP -> Hc [label="HO-249"]
+LHA -> Hc [label="HO-249"]
+Decl -> Hc [label="HO-249"]
 
 Ho -> Intercept
 Hc -> Intercept
