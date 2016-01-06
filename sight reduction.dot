@@ -24,9 +24,12 @@ HA -> Ho [label="Alt. corr.\ntables"]
 Time -> hours
 Time -> min_sec
 
-hours -> GHA_u [label="Almanac"]
-hours -> Decl_u [label="Almanac"]
-hours -> d  [label="Almanac"]
+Almanac [shape="rectangle"]
+hours -> Almanac
+
+Almanac -> GHA_u
+Almanac -> Decl_u
+Almanac -> d
 
 ic [label="Increments &\nCorrections" shape="rectangle"]
 min_sec -> ic
@@ -50,6 +53,7 @@ Decl -> Decl_d
 Decl -> Decl_m
 Decl_d -> HO_249
 
+d2 [label="d"]
 HO_249 -> Hc_u
 HO_249 -> Z -> Zn
 HO_249 -> d2
