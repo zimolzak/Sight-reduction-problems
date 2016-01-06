@@ -1,11 +1,15 @@
 digraph {
 
+DR_pos [label="DR\nposition"]
+Ht_of_eye [label="Ht. of\neye"]
+HO_249 [label="HO-249"]
+
 sextant -> Hs
 Hs -> HA
 IE -> HA
-Ht_of_eye -> Dip [label="yellow"]
+Ht_of_eye -> Dip [label="Alt. corr.\ntables"]
 Dip -> HA
-HA -> Ho [label="yellow"]
+HA -> Ho [label="Alt. corr.\ntables"]
 
 Time -> GHA [label="Almanac"]
 Time -> Decl [label="Almanac"]
