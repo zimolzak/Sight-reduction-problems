@@ -4,6 +4,16 @@ DR_pos [label="DR\nposition"]
 Ht_of_eye [label="Ht. of\neye"]
 HO_249 [label="HO-249"]
 
+min_sec [label="min, sec\nof time"]
+GHA_u [label="GHA,\nuncorrected"]
+Decl_u [label="Decl,\nuncorrected"]
+Decl_d [label="degrees\nof Decl"]
+Decl_m [label="minutes\nof Decl"]
+Hc_u [label="Hc,\nuncorrected"]
+
+AP -> Zn
+LHA -> Zn
+
 sextant -> Hs
 Hs -> HA
 IE -> HA
@@ -11,9 +21,22 @@ Ht_of_eye -> Dip [label="Alt. corr.\ntables"]
 Dip -> HA
 HA -> Ho [label="Alt. corr.\ntables"]
 
-Time -> GHA [label="Almanac"]
-Time -> Decl [label="Almanac"]
+Time -> hours
+Time -> min_sec
 
+hours -> GHA_u [label="Almanac"]
+hours -> Decl_u [label="Almanac"]
+hours -> d  [label="Almanac"]
+
+ic [label="Increments &\nCorrections" shape="rectangle"]
+min_sec -> ic
+GHA_u -> ic
+Decl_u -> ic
+d -> ic
+ic -> GHA
+ic -> Decl
+
+GHA -> AP
 DR_pos -> AP
 AP -> LHA
 GHA -> LHA
@@ -22,10 +45,20 @@ HO_249 [shape="rectangle"]
 
 AP -> HO_249
 LHA -> HO_249
-Decl -> HO_249
 
-HO_249 -> Hc
-HO_249 -> Zn
+Decl -> Decl_d
+Decl -> Decl_m
+Decl_d -> HO_249
+
+HO_249 -> Hc_u
+HO_249 -> Z -> Zn
+HO_249 -> d2
+
+tab5 [label="Table 5\nof HO-249" shape="rectangle"]
+Decl_m -> tab5
+d2 -> tab5
+Hc_u -> tab5
+tab5 -> Hc
 
 Ho -> Intercept
 Hc -> Intercept
