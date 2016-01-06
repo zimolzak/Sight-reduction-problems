@@ -4,3 +4,5 @@
 *.csv
 *.txt
 out.md
+*.docx
+*.html
