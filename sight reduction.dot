@@ -1,0 +1,25 @@
+digraph {
+sextant -> Hs
+Hs -> HA
+IE -> HA
+Dip -> HA
+HA -> Ho
+
+Time -> GHA
+Almanac -> GHA
+Time -> Decl
+
+DR_pos -> AP
+AP -> LHA
+GHA -> LHA
+
+AP -> Hc
+Tables -> Hc
+LHA -> Hc
+
+Ho -> Intercept
+Hc -> Intercept
+
+
+
+}
