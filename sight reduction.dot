@@ -14,13 +14,20 @@ DR_pos -> AP
 AP -> LHA
 GHA -> LHA
 
-AP -> Hc [label="HO-249"]
-LHA -> Hc [label="HO-249"]
-Decl -> Hc [label="HO-249"]
+HO_249 [shape="rectangle"]
+
+AP -> HO_249
+LHA -> HO_249
+Decl -> HO_249
+
+HO_249 -> Hc
+HO_249 -> Zn
 
 Ho -> Intercept
 Hc -> Intercept
 
-
+AP -> LOP
+Zn -> LOP
+Intercept -> LOP
 
 }
