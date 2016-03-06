@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
                     ho2hs, roundup_deg, int_deg, ho249, ho_correction,
@@ -23,8 +24,18 @@ celestial position with the "True (secret) position" of Sight number
 
 """
 
-n_fixes = 20
+n_fixes = 10
 sights_per_fix = 3
+print_solution = True
+flag_2016 = False
+
+for arg in sys.argv:
+    if arg == '--no-solutions':
+        print_solution = False
+    if arg == '--fixed-seed':
+        random.seed(10097)
+    if arg == '--2016':
+        flag_2016 = True
 
 for fix in range(1, n_fixes + 1):
 
@@ -35,7 +46,10 @@ for fix in range(1, n_fixes + 1):
         valid_parameters = None
         text = '' # A buffer that we print only if no errors occur.
         text += 'Problem number ' + str(fix) + "\n========\n\n"
-        datelist = ['2016/01/12 14:00:00']
+        if not flag_2016:
+            datelist = ['2015/01/12 14:00:00']
+        else:
+            datelist = ['2016/01/12 14:00:00']
         
         # Randomize the initial date.
         curr_date = ephem.Date(datelist[0])
@@ -97,52 +111,54 @@ for fix in range(1, n_fixes + 1):
             text += "\n"
             
             ## Do sight reduction, to find solution to problem.
+
+            if print_solution:
     
-            # Forward-calculate Hs --> Ha --> Ho
-            text += "Solution\n--------\n"
-            ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
-            try:
-                ho_1 = ephem.degrees(0)
-                ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
-            except RefractionError as err:
-                valid_parameters = False
-            text += "* Ha " + str(ha_1) + "\n"
-            text += "* Ho " + str(ho_1) + "\n"
-            # Look up GHA and Dec of the sun.
-            al = almanac(date_str)
-            text += ("* GHA " + str(al['gha']) + " / Dec " +
-                              str(al['dec']) + "\n")
-            # Choose an AP.
-            ap.lat = int_deg(dr.lat) # FIXME - better to do round, not int().
-            base_ap_lon = int_deg(dr.lon)
-            ap.lon = base_ap_lon + roundup_deg(al['gha'])
-            text += "* Ass Long " + str(ap.lon) + "\n"
-            lha = ephem.degrees(al['gha'] + ap.lon)
-            text += "* LHA " + str(lha.norm) + "\n"
-            # Solve the triangle (for Hc and Z), given our AP.
-            text += ("* Calculating at AP " + str(ap.lat) + ' ' +
-                              str(ap.lon) + ".\n")
-            s = ephem.Sun(ap)
-            text += "* Hc " + str(s.alt) + " / Z " + str(s.az) + "\n"
-            # Go from AP to real position (technically *line* of position).
-            I = intercept(ho_1, s.alt)
-            text += "* Intercept " + str(I[0]) + ' ' + I[1] + "\n"
-            if I[1][0] == 'A':
-                theta = s.az - pi
-            elif I[1][0] == 'T':
-                theta = s.az
-            x = destination(ap.lat, ap.lon, theta, I[0])
-            dir1 = ephem.degrees(s.az - pi/2)
-            dir2 = ephem.degrees(s.az + pi/2)
-            text +=("* LOP thru " + str(x.lat) + ' ' + str(x.lon) +
-                    " in the " + str(dir1.norm) + ' ' + str(dir2.norm) +
-                    " direction\n")
-            text += ("* Hdg. from Intercept to true position " +
-                              str(ini_bearing(x, true)) + " (Should be "+
-                     "similar to LOP.)\n")
-            text += ("* True (secret) position is currently " +
-                     str(true.lat) + ' ' + str(true.lon) + "\n")
-            text += "\n"
+                # Forward-calculate Hs --> Ha --> Ho
+                text += "Solution\n--------\n"
+                ha_1 = ha(hs_1, ie_ref, arc_ref, eyeht_ref)
+                try:
+                    ho_1 = ephem.degrees(0)
+                    ho_1 = ho(ha_1, ephem.Date(date_str), limb_ref)
+                except RefractionError as err:
+                    valid_parameters = False
+                text += "* Ha " + str(ha_1) + "\n"
+                text += "* Ho " + str(ho_1) + "\n"
+                # Look up GHA and Dec of the sun.
+                al = almanac(date_str)
+                text += ("* GHA " + str(al['gha']) + " / Dec " +
+                                  str(al['dec']) + "\n")
+                # Choose an AP.
+                ap.lat = int_deg(dr.lat) # FIXME - better to do round, not int().
+                base_ap_lon = int_deg(dr.lon)
+                ap.lon = base_ap_lon + roundup_deg(al['gha'])
+                text += "* Ass Long " + str(ap.lon) + "\n"
+                lha = ephem.degrees(al['gha'] + ap.lon)
+                text += "* LHA " + str(lha.norm) + "\n"
+                # Solve the triangle (for Hc and Z), given our AP.
+                text += ("* Calculating at AP " + str(ap.lat) + ' ' +
+                                  str(ap.lon) + ".\n")
+                s = ephem.Sun(ap)
+                text += "* Hc " + str(s.alt) + " / Z " + str(s.az) + "\n"
+                # Go from AP to real position (technically *line* of position).
+                I = intercept(ho_1, s.alt)
+                text += "* Intercept " + str(I[0]) + ' ' + I[1] + "\n"
+                if I[1][0] == 'A':
+                    theta = s.az - pi
+                elif I[1][0] == 'T':
+                    theta = s.az
+                x = destination(ap.lat, ap.lon, theta, I[0])
+                dir1 = ephem.degrees(s.az - pi/2)
+                dir2 = ephem.degrees(s.az + pi/2)
+                text +=("* LOP thru " + str(x.lat) + ' ' + str(x.lon) +
+                        " in the " + str(dir1.norm) + ' ' + str(dir2.norm) +
+                        " direction\n")
+                text += ("* Hdg. from Intercept to true position " +
+                                  str(ini_bearing(x, true)) + " (Should be "+
+                         "similar to LOP.)\n")
+                text += ("* True (secret) position is currently " +
+                         str(true.lat) + ' ' + str(true.lon) + "\n")
+                text += "\n"
             
             ## Update the secret coordinates for next sight.
             
