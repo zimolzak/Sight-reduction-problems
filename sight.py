@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import ephem
 from sr_lib import (altazimuth, almanac, ha, ho, intercept, destination,
                     ho2hs, roundup_deg, int_deg, ho249, ho_correction,
@@ -23,14 +24,18 @@ celestial position with the "True (secret) position" of Sight number
 
 """
 
-n_fixes = 20
+n_fixes = 10
 sights_per_fix = 3
-print_solution = False
+print_solution = True
+flag_2016 = False
 
-if print_solution:
-    random.seed(10097)
-else:
-    random.seed(32533)
+for arg in sys.argv:
+    if arg == '--no-solutions':
+        print_solution = False
+    if arg == '--fixed-seed':
+        random.seed(10097)
+    if arg == '--2016':
+        flag_2016 = True
 
 for fix in range(1, n_fixes + 1):
 
@@ -41,7 +46,10 @@ for fix in range(1, n_fixes + 1):
         valid_parameters = None
         text = '' # A buffer that we print only if no errors occur.
         text += 'Problem number ' + str(fix) + "\n========\n\n"
-        datelist = ['2015/01/12 14:00:00']
+        if not flag_2016:
+            datelist = ['2015/01/12 14:00:00']
+        else:
+            datelist = ['2016/01/12 14:00:00']
         
         # Randomize the initial date.
         curr_date = ephem.Date(datelist[0])
